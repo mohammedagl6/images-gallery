@@ -5,15 +5,17 @@ import { useState, useEffect } from 'react';
 import uploadFile from '../../firebase/uploadFile';
 import addDocument from '../../firebase/addDocument';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
+import { useAuth } from '../../context/AuthContext';
 const ProgressItem = ({ file }) => {
   const classes = useStyles();
   const [imageUrl, setImageUrl] = useState(null);
   const [progress, setProgress] = useState(0);
+  const { currentUser } = useAuth();
   useEffect(() => {
     const uploadImage = async () => {
       try {
         const url = await uploadFile(file, setProgress);
-        await addDocument(url);
+        await addDocument(url, currentUser.uid);
         setImageUrl(null);
       } catch (error) {
         console.log(error);
