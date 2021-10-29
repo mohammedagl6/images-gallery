@@ -11,6 +11,7 @@ import {
 } from '@mui/material/';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
+import GoogleIcon from '@mui/icons-material/Google';
 import { useAuth } from '../../context/AuthContext';
 
 export default function FormDialog() {
@@ -18,7 +19,7 @@ export default function FormDialog() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-  const { login, signUp, isOpen, setIsOpen } = useAuth();
+  const { login, signUp, isOpen, setIsOpen, loginWithGoogle } = useAuth();
 
   const handleClose = () => {
     setIsOpen(false);
@@ -39,6 +40,15 @@ export default function FormDialog() {
         console.log(error);
       }
     }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+    } catch (error) {
+      console.log(error);
+    }
+    setIsOpen(false);
   };
 
   return (
@@ -116,6 +126,15 @@ export default function FormDialog() {
               {isRegister ? 'Login ' : 'Register'}
             </Button>
           </DialogContentText>
+        </DialogActions>
+        <DialogActions style={{ justifyContent: 'center' }}>
+          <Button
+            variant='outlined'
+            startIcon={<GoogleIcon />}
+            onClick={handleGoogleLogin}
+          >
+            Login with Google
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
