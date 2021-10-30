@@ -1,12 +1,12 @@
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-
 import { useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import Login from '../user/Login';
 
 const Form = ({ setFiles }) => {
   const fileRef = useRef();
-  const { setIsOpen, currentUser } = useAuth();
+  const { setIsOpen, currentUser, setModalContent } = useAuth();
   const handleChange = (e) => {
     setFiles([...e.target.files]);
     fileRef.current.value = null;
@@ -15,6 +15,7 @@ const Form = ({ setFiles }) => {
     if (currentUser) {
       fileRef.current.click();
     } else {
+      setModalContent(<Login />);
       setIsOpen(true);
     }
   };

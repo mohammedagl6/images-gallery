@@ -15,9 +15,11 @@ import {
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { useAuth } from '../context/AuthContext';
+import Login from './user/Login';
+import Profile from './user/Profile';
 
 export default function Nav() {
-  const { currentUser, setIsOpen, logout } = useAuth();
+  const { currentUser, logout, setIsOpen, setModalContent } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -26,11 +28,19 @@ export default function Nav() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleLoginModal = () => {
+    setModalContent(<Login />);
+    setIsOpen(true);
+  };
+  const handleProfileModal = () => {
+    setModalContent(<Profile />);
+    setIsOpen(true);
+  };
   return (
     <>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         {!currentUser ? (
-          <Button startIcon={<LockIcon />} onClick={() => setIsOpen(true)}>
+          <Button startIcon={<LockIcon />} onClick={handleLoginModal}>
             Login
           </Button>
         ) : (
@@ -77,7 +87,7 @@ export default function Nav() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem>
+        <MenuItem onClick={handleProfileModal}>
           <Avatar /> Profile
         </MenuItem>
         <Divider />
