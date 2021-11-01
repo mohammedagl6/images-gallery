@@ -35,8 +35,8 @@ const AuthContext = ({ children }) => {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(auth, provider);
   };
-  const updateUserProfile = (displayName) => {
-    return updateProfile(currentUser, { displayName });
+  const updateUserProfile = (userObj) => {
+    return updateProfile(currentUser, userObj);
   };
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -58,6 +58,7 @@ const AuthContext = ({ children }) => {
     ModalContent,
     setModalContent,
     updateUserProfile,
+    setLoading,
   };
 
   return <authContext.Provider value={value}>{children}</authContext.Provider>;

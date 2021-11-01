@@ -2,7 +2,7 @@ import ImageListItem from '@mui/material/ImageListItem';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import useStyles from './uploadStyles';
 import { useState, useEffect } from 'react';
-import uploadFile from '../../firebase/uploadFile';
+import uploadFileProgress from '../../firebase/uploadFileProgress';
 import addDocument from '../../firebase/addDocument';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 import { useAuth } from '../../context/AuthContext';
@@ -14,7 +14,7 @@ const ProgressItem = ({ file }) => {
   useEffect(() => {
     const uploadImage = async () => {
       try {
-        const url = await uploadFile(file, setProgress);
+        const url = await uploadFileProgress(file, setProgress);
         await addDocument(url, currentUser.uid);
         setImageUrl(null);
       } catch (error) {

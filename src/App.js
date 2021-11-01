@@ -5,6 +5,7 @@ import Upload from './components/upload/Upload';
 import Modal from './components/Modal';
 import AuthContext from './context/AuthContext';
 import useStyles from './styles';
+import Loading from './components/Loading';
 
 const App = () => {
   const classes = useStyles();
@@ -13,6 +14,7 @@ const App = () => {
     <Container maxWidth='lg' className={classes.container}>
       <AuthContext>
         <Nav />
+        <Loading />
         <Modal />
         <Upload />
         <ImagesList />

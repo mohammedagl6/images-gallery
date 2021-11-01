@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   TextField,
@@ -12,23 +12,46 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
+import uploadFile from '../../firebase/uploadFile';
 
 export default function Profile() {
-  const { currentUser, setIsOpen, updateUserProfile } = useAuth();
+  const { currentUser, setIsOpen, updateUserProfile, setLoading } = useAuth();
   const [name, setName] = useState(currentUser.displayName);
+  const [photoUrl, setPhotoUrl] = useState(currentUser?.photoURL);
+  const [file, setFile] = useState(null);
   const handleClose = () => {
     setIsOpen(false);
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    try {
-      await updateUserProfile(name);
-    } catch (error) {
-      console.log(error);
+    if (file) {
+      try {
+        const url = await uploadFile(file);
+        await updateUserProfile({ displayName: name, photoURL: url });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        await updateUserProfile({ displayName: name });
+      } catch (error) {
+        console.log(error);
+      }
     }
+    setLoading(false);
+    handleClose();
   };
 
+  const handleChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setFile(file);
+      setPhotoUrl(URL.createObjectURL(file));
+    }
+  };
   return (
     <>
       <DialogTitle>
@@ -62,19 +85,23 @@ export default function Profile() {
             value={name || ''}
             onChange={(e) => setName(e.target.value)}
           />
-          <Avatar
-            alt={currentUser?.displayName}
-            src={currentUser?.photoURL}
-            sx={{ width: 56, height: 56 }}
-          />
+          <label htmlFor='profilePhoto'>
+            <input
+              accept='image/*'
+              id='profilePhoto'
+              type='file'
+              style={{ display: 'none' }}
+              onChange={handleChange}
+            />
+            <Avatar
+              alt={currentUser?.displayName}
+              src={photoUrl}
+              sx={{ width: 75, height: 75, cursor: 'pointer' }}
+            />
+          </label>
         </DialogContent>
         <DialogActions>
-          <Button
-            variant='contained'
-            onClick={handleClose}
-            endIcon={<SendIcon />}
-            type='submit'
-          >
+          <Button variant='contained' endIcon={<SendIcon />} type='submit'>
             Update
           </Button>
         </DialogActions>

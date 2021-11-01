@@ -46,7 +46,10 @@ export default function Nav() {
         ) : (
           <Tooltip title='Account settings'>
             <IconButton onClick={handleClick} size='small' sx={{ ml: 2 }}>
-              <Avatar sx={{ width: 32, height: 32 }}>
+              <Avatar
+                sx={{ width: 32, height: 32 }}
+                src={currentUser?.photoURL}
+              >
                 {currentUser?.email?.charAt(0)?.toUpperCase()}
               </Avatar>
             </IconButton>
@@ -88,7 +91,7 @@ export default function Nav() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem onClick={handleProfileModal}>
-          <Avatar /> Profile
+          <Avatar src={currentUser?.photoURL} /> Profile
         </MenuItem>
         <Divider />
         <MenuItem>
