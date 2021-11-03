@@ -17,6 +17,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { useAuth } from '../context/AuthContext';
 import Login from './user/Login';
 import Profile from './user/Profile';
+import AccountSettings from './user/Settings';
 
 export default function Nav() {
   const { currentUser, logout, setIsOpen, setModalContent } = useAuth();
@@ -34,6 +35,10 @@ export default function Nav() {
   };
   const handleProfileModal = () => {
     setModalContent(<Profile />);
+    setIsOpen(true);
+  };
+  const handleSettingsModal = () => {
+    setModalContent(<AccountSettings />);
     setIsOpen(true);
   };
   return (
@@ -94,7 +99,7 @@ export default function Nav() {
           <Avatar src={currentUser?.photoURL} /> Profile
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem onClick={handleSettingsModal}>
           <ListItemIcon>
             <Settings fontSize='small' />
           </ListItemIcon>
