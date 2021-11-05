@@ -5,10 +5,8 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-  IconButton,
 } from '@mui/material/';
-import CloseIcon from '@mui/icons-material/Close';
+
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -21,7 +19,7 @@ import DeleteAccount from './DeleteAccount';
 
 export default function ReAuth({ action }) {
   const passwordRef = useRef();
-  const { setIsOpen, currentUser, setModalContent } = useAuth();
+  const { modal, setModal, currentUser, alert, setAlert } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,34 +32,34 @@ export default function ReAuth({ action }) {
       await reauthenticateWithCredential(currentUser, credential);
 
       if (action === 'changePassword') {
-        setModalContent(<ChangePassword />);
+        setModal({
+          ...modal,
+          title: 'Change Password',
+          content: <ChangePassword />,
+        });
       } else if (action === 'changeEmail') {
-        setModalContent(<ChangeEmail />);
+        setModal({ ...modal, title: 'Update Email', content: <ChangeEmail /> });
       } else if (action === 'deleteAccount') {
-        setModalContent(<DeleteAccount />);
+        setModal({
+          ...modal,
+          title: 'Delete Account',
+          content: <DeleteAccount />,
+        });
       }
     } catch (error) {
-      console.log(error);
+      setAlert({
+        ...alert,
+        isAlert: true,
+        severity: 'error',
+        message: error.message,
+        timeout: 5000,
+      });
+      console.error(error);
     }
   };
 
   return (
     <>
-      <DialogTitle>
-        Re-Login
-        <IconButton
-          aria-label='close'
-          onClick={() => setIsOpen(false)}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>
           <DialogContentText>

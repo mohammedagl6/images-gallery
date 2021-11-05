@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   signOut,
   updateProfile,
+  sendPasswordResetEmail,
 } from '@firebase/auth';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../firebase/config';
@@ -19,8 +20,13 @@ export const useAuth = () => {
 const AuthContext = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [ModalContent, setModalContent] = useState();
+  const [modal, setModal] = useState({ isOpen: false, title: '', content: '' });
+  const [alert, setAlert] = useState({
+    isAlert: false,
+    severity: 'info',
+    message: '',
+    timeout: null,
+  });
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
@@ -38,6 +44,9 @@ const AuthContext = ({ children }) => {
   const updateUserProfile = (userObj) => {
     return updateProfile(currentUser, userObj);
   };
+  const resetPassword = (email) => {
+    return sendPasswordResetEmail(auth, email);
+  };
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
@@ -49,16 +58,17 @@ const AuthContext = ({ children }) => {
   const value = {
     currentUser,
     loading,
+    modal,
+    setModal,
+    alert,
+    setAlert,
     login,
     signUp,
     logout,
-    isOpen,
-    setIsOpen,
     loginWithGoogle,
-    ModalContent,
-    setModalContent,
     updateUserProfile,
     setLoading,
+    resetPassword,
   };
 
   return <authContext.Provider value={value}>{children}</authContext.Provider>;

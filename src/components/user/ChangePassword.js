@@ -5,10 +5,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-  IconButton,
 } from '@mui/material/';
-import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
 import { updatePassword } from '@firebase/auth';
@@ -16,36 +13,37 @@ import { updatePassword } from '@firebase/auth';
 export default function ChangePassword() {
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-  const { setIsOpen, currentUser } = useAuth();
+  const { modal, setModal, currentUser, alert, setAlert } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (passwordRef.current.value !== confirmPasswordRef.current.value) {
+      return setAlert({
+        ...alert,
+        isAlert: true,
+        severity: 'error',
+        message: "Passwords don't match",
+        timeout: 5000,
+      });
+    }
 
     try {
       await updatePassword(currentUser, passwordRef.current.value);
-      setIsOpen(false);
+      setModal({ ...modal, isOpen: false });
     } catch (error) {
-      console.log(error);
+      setAlert({
+        ...alert,
+        isAlert: true,
+        severity: 'error',
+        message: error.message,
+        timeout: 5000,
+      });
+      console.error(error);
     }
   };
 
   return (
     <>
-      <DialogTitle>
-        New Password
-        <IconButton
-          aria-label='close'
-          onClick={() => setIsOpen(false)}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>
           <DialogContentText>Please enter your new Password</DialogContentText>

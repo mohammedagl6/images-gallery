@@ -8,16 +8,15 @@ import {
 } from '@mui/material/';
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
-import { updateEmail } from '@firebase/auth';
 
-export default function ChangeEmail() {
-  const { modal, setModal, currentUser, alert, setAlert } = useAuth();
-  const emailRef = useRef(currentUser.email);
+export default function ResetPassword() {
+  const { modal, setModal, resetPassword, alert, setAlert } = useAuth();
+  const emailRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateEmail(currentUser, emailRef.current.value);
+      await resetPassword(emailRef.current.value);
       setModal({ ...modal, isOpen: false });
     } catch (error) {
       setAlert({
@@ -36,7 +35,7 @@ export default function ChangeEmail() {
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>
           <DialogContentText>
-            You can change your email by updating this field:
+            Enter your email you registered already with:
           </DialogContentText>
           <TextField
             autoFocus
@@ -47,12 +46,11 @@ export default function ChangeEmail() {
             fullWidth
             variant='standard'
             inputRef={emailRef}
-            defaultValue={currentUser.email}
           />
         </DialogContent>
         <DialogActions>
           <Button variant='contained' endIcon={<SendIcon />} type='submit'>
-            Submit
+            Send Reset Link
           </Button>
         </DialogActions>
       </form>

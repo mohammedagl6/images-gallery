@@ -5,22 +5,28 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-  IconButton,
   Avatar,
 } from '@mui/material/';
-import CloseIcon from '@mui/icons-material/Close';
+
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
 import uploadFile from '../../firebase/uploadFile';
 
 export default function Profile() {
-  const { currentUser, setIsOpen, updateUserProfile, setLoading } = useAuth();
+  const {
+    currentUser,
+    modal,
+    setModal,
+    updateUserProfile,
+    setLoading,
+    alert,
+    setAlert,
+  } = useAuth();
   const [name, setName] = useState(currentUser.displayName);
   const [photoUrl, setPhotoUrl] = useState(currentUser?.photoURL);
   const [file, setFile] = useState(null);
   const handleClose = () => {
-    setIsOpen(false);
+    setModal({ ...modal, isOpen: false });
   };
 
   const handleSubmit = async (e) => {
@@ -31,13 +37,27 @@ export default function Profile() {
         const url = await uploadFile(file);
         await updateUserProfile({ displayName: name, photoURL: url });
       } catch (error) {
-        console.log(error);
+        setAlert({
+          ...alert,
+          isAlert: true,
+          severity: 'error',
+          message: error.message,
+          timeout: 5000,
+        });
+        console.error(error);
       }
     } else {
       try {
         await updateUserProfile({ displayName: name });
       } catch (error) {
-        console.log(error);
+        setAlert({
+          ...alert,
+          isAlert: true,
+          severity: 'error',
+          message: error.message,
+          timeout: 5000,
+        });
+        console.error(error);
       }
     }
     setLoading(false);
@@ -54,21 +74,6 @@ export default function Profile() {
   };
   return (
     <>
-      <DialogTitle>
-        Profile
-        <IconButton
-          aria-label='close'
-          onClick={handleClose}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>
           <DialogContentText>

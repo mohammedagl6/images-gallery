@@ -20,7 +20,7 @@ import Profile from './user/Profile';
 import AccountSettings from './user/Settings';
 
 export default function Nav() {
-  const { currentUser, logout, setIsOpen, setModalContent } = useAuth();
+  const { currentUser, logout, setModal, modal } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -30,16 +30,23 @@ export default function Nav() {
     setAnchorEl(null);
   };
   const handleLoginModal = () => {
-    setModalContent(<Login />);
-    setIsOpen(true);
+    setModal({ ...modal, isOpen: true, content: <Login /> });
   };
   const handleProfileModal = () => {
-    setModalContent(<Profile />);
-    setIsOpen(true);
+    setModal({
+      ...modal,
+      isOpen: true,
+      title: 'User Profile',
+      content: <Profile />,
+    });
   };
   const handleSettingsModal = () => {
-    setModalContent(<AccountSettings />);
-    setIsOpen(true);
+    setModal({
+      ...modal,
+      isOpen: true,
+      title: 'Account Settings',
+      content: <AccountSettings />,
+    });
   };
   return (
     <>

@@ -1,75 +1,97 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Button,
   TextField,
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-  IconButton,
 } from '@mui/material/';
-import CloseIcon from '@mui/icons-material/Close';
+
 import SendIcon from '@mui/icons-material/Send';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useAuth } from '../../context/AuthContext';
+import ResetPassword from './ResetPassword';
 
 export default function FormDialog() {
   const [isRegister, setIsRegister] = useState(false);
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-  const { login, signUp, loginWithGoogle, setIsOpen } = useAuth();
+  const { login, signUp, loginWithGoogle, modal, setModal, alert, setAlert } =
+    useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { email, password, confirmPassword } = {
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+      confirmPassword: confirmPasswordRef?.current?.value,
+    };
     if (isRegister) {
       try {
-        await signUp(emailRef.current.value, passwordRef.current.value);
-        setIsOpen(false);
+        if (password !== confirmPassword) {
+          return setAlert({
+            ...alert,
+            isAlert: true,
+            severity: 'error',
+            message: "Passwords don't match!",
+            timeout: 5000,
+          });
+        }
+        await signUp(email, password);
+
+        setModal({ ...modal, isOpen: false });
       } catch (error) {
-        console.log(error);
+        setAlert({
+          ...alert,
+          isAlert: true,
+          severity: 'error',
+          message: error.message,
+          timeout: 5000,
+        });
+        console.error(error);
       }
     } else {
       try {
-        const result = await login(
-          emailRef.current.value,
-          passwordRef.current.value,
-        );
-        console.log(result);
-        setIsOpen(false);
+        await login(email, password);
+        setModal({ ...modal, isOpen: false });
       } catch (error) {
-        console.log(error);
+        setAlert({
+          ...alert,
+          isAlert: true,
+          severity: 'error',
+          message: error.message,
+          timeout: 5000,
+        });
+        console.error(error);
       }
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await loginWithGoogle();
-      console.log(result);
+      await loginWithGoogle();
     } catch (error) {
-      console.log(error);
+      setAlert({
+        ...alert,
+        isAlert: true,
+        severity: 'error',
+        message: error.message,
+        timeout: 5000,
+      });
+      console.error(error);
     }
-    setIsOpen(false);
+    setModal({ ...modal, isOpen: false });
   };
-
+  useEffect(() => {
+    if (isRegister) {
+      setModal({ ...modal, title: 'Register' });
+    } else {
+      setModal({ ...modal, title: 'Login' });
+    }
+  }, [isRegister]);
   return (
     <>
-      <DialogTitle>
-        {isRegister ? 'Register' : 'Login'}
-        <IconButton
-          aria-label='close'
-          onClick={() => setIsOpen(false)}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>
           <DialogContentText>
@@ -106,7 +128,19 @@ export default function FormDialog() {
             />
           )}
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ justifyContent: 'space-between' }}>
+          <Button
+            size='small'
+            onClick={() =>
+              setModal({
+                ...modal,
+                title: 'Reset Password',
+                content: <ResetPassword />,
+              })
+            }
+          >
+            Forgot Password
+          </Button>
           <Button variant='contained' endIcon={<SendIcon />} type='submit'>
             {isRegister ? 'Register' : 'Login'}
           </Button>
