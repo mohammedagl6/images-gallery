@@ -9,16 +9,25 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
 import { updateEmail } from '@firebase/auth';
+import ModalSuccess from '../modal/ModalSuccess';
 
 export default function ChangeEmail() {
-  const { modal, setModal, currentUser, alert, setAlert } = useAuth();
+  const { currentUser, alert, setAlert, modal, setModal } = useAuth();
   const emailRef = useRef(currentUser.email);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await updateEmail(currentUser, emailRef.current.value);
-      setModal({ ...modal, isOpen: false });
+      setModal({ ...modal, content: '' });
+      setAlert({
+        ...alert,
+        isAlert: true,
+        severity: 'success',
+        message: 'Your email has been updated successfully',
+        timeout: 5000,
+        closeModal: true,
+      });
     } catch (error) {
       setAlert({
         ...alert,

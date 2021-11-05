@@ -8,16 +8,23 @@ import { useAuth } from '../../context/AuthContext';
 
 export default function ModalAlert() {
   const {
-    alert: { isAlert, timeout, message, severity },
+    alert: { isAlert, timeout, message, severity, closeModal },
     setAlert,
+    modal,
+    setModal,
   } = useAuth();
   useEffect(() => {
     let timer;
     if (timeout) {
-      timer = setTimeout(() => setAlert({ ...alert, isAlert: false }), timeout);
+      timer = setTimeout(() => {
+        if (closeModal) {
+          setModal({ ...modal, isOpen: false });
+        }
+        setAlert({ ...alert, isAlert: false, closeModal: false });
+      }, timeout);
     }
     return () => clearTimeout(timer);
-  }, [timeout, setAlert]);
+  }, [timeout]);
   return (
     isAlert && (
       <Box sx={{ width: '100%' }}>

@@ -9,11 +9,12 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
 import { updatePassword } from '@firebase/auth';
+import ModalSuccess from '../modal/ModalSuccess';
 
 export default function ChangePassword() {
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-  const { modal, setModal, currentUser, alert, setAlert } = useAuth();
+  const { currentUser, alert, setAlert, modal, setModal } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +30,15 @@ export default function ChangePassword() {
 
     try {
       await updatePassword(currentUser, passwordRef.current.value);
-      setModal({ ...modal, isOpen: false });
+      setModal({ ...modal, content: '' });
+      setAlert({
+        ...alert,
+        isAlert: true,
+        severity: 'success',
+        message: 'Your Password has been updated',
+        timeout: 5000,
+        closeModal: true,
+      });
     } catch (error) {
       setAlert({
         ...alert,

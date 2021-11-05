@@ -4,19 +4,27 @@ import {
   DialogContent,
   DialogContentText,
 } from '@mui/material/';
-
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
 import { deleteUser } from 'firebase/auth';
+import ModalSuccess from '../modal/ModalSuccess';
 
-export default function ChangeEmail() {
+export default function DeleteAccount() {
   const { modal, setModal, currentUser, alert, setAlert } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await deleteUser(currentUser);
-      setModal({ ...modal, isOpen: false });
+      setModal({ ...modal, content: '' });
+      setAlert({
+        ...alert,
+        isAlert: true,
+        severity: 'success',
+        message: 'Your account has been deleted!',
+        timeout: 5000,
+        closeModal: true,
+      });
     } catch (error) {
       setAlert({
         ...alert,

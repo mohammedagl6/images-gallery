@@ -13,21 +13,11 @@ import { useAuth } from '../../context/AuthContext';
 import uploadFile from '../../firebase/uploadFile';
 
 export default function Profile() {
-  const {
-    currentUser,
-    modal,
-    setModal,
-    updateUserProfile,
-    setLoading,
-    alert,
-    setAlert,
-  } = useAuth();
+  const { currentUser, updateUserProfile, setLoading, alert, setAlert } =
+    useAuth();
   const [name, setName] = useState(currentUser.displayName);
   const [photoUrl, setPhotoUrl] = useState(currentUser?.photoURL);
   const [file, setFile] = useState(null);
-  const handleClose = () => {
-    setModal({ ...modal, isOpen: false });
-  };
 
   const handleSubmit = async (e) => {
     setLoading(true);
@@ -35,6 +25,7 @@ export default function Profile() {
     if (file) {
       try {
         const url = await uploadFile(file);
+        console.log(url);
         await updateUserProfile({ displayName: name, photoURL: url });
       } catch (error) {
         setAlert({
@@ -61,7 +52,13 @@ export default function Profile() {
       }
     }
     setLoading(false);
-    handleClose();
+    setAlert({
+      ...alert,
+      isAlert: true,
+      severity: 'success',
+      message: 'Your profile updated successfully',
+      timeout: 3000,
+    });
   };
 
   const handleChange = (e) => {
