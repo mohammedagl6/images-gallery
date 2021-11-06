@@ -9,7 +9,6 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
 import { updatePassword } from '@firebase/auth';
-import ModalSuccess from '../modal/ModalSuccess';
 
 export default function ChangePassword() {
   const passwordRef = useRef();

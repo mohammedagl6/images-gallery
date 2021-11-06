@@ -9,7 +9,6 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
 import { updateEmail } from '@firebase/auth';
-import ModalSuccess from '../modal/ModalSuccess';
 
 export default function ChangeEmail() {
   const { currentUser, alert, setAlert, modal, setModal } = useAuth();

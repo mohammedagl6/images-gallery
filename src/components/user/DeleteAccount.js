@@ -7,7 +7,6 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
 import { deleteUser } from 'firebase/auth';
-import ModalSuccess from '../modal/ModalSuccess';
 
 export default function DeleteAccount() {
   const { modal, setModal, currentUser, alert, setAlert } = useAuth();
