@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
-import Collapse from '@mui/material/Collapse';
+import { Box, Alert, IconButton, Collapse } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function Notification({ severity, content, timeout = null }) {
   const [open, setOpen] = useState(true);
   useEffect(() => {
     let timer;
-    console.log('timeout:', timeout);
     if (timeout) {
       timer = setTimeout(() => setOpen(false), timeout);
     }

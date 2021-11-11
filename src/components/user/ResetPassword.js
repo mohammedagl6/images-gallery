@@ -25,6 +25,7 @@ export default function ResetPassword() {
         severity: 'error',
         message: error.message,
         timeout: 5000,
+        location: 'modal',
       });
       console.error(error);
     }

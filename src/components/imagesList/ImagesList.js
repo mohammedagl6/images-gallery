@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
+import { ImageList, ImageListItem, Avatar, Tooltip } from '@mui/material';
 import useFirestore from '../../firebase/useFirestore';
 import useStyles from './imageListStyles';
 import SimpleReactLightbox from 'simple-react-lightbox';
@@ -16,7 +15,7 @@ function srcset(image, size, rows = 1, cols = 1) {
 }
 
 const ImagesList = () => {
-  const { documents: images } = useFirestore();
+  const { documents: images } = useFirestore('gallery');
 
   const classes = useStyles();
   return (
@@ -52,6 +51,12 @@ const ImagesList = () => {
                 alt='Gallery'
                 loading='lazy'
               />
+              <Tooltip
+                title={item?.data?.uName || item?.data?.uEmail?.split('@')[0]}
+                sx={{ position: 'absolute', bottom: '3px', right: '3px' }}
+              >
+                <Avatar src={item?.data?.uPhoto} alt='Travis Howard' />
+              </Tooltip>
             </ImageListItem>
           ))}
         </ImageList>

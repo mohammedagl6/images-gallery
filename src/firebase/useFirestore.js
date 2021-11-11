@@ -1,13 +1,15 @@
 import { db } from './config';
 import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
-import { useState } from 'react/cjs/react.development';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-const useFirestore = () => {
+const useFirestore = (collectionName) => {
   const [documents, setDocuments] = useState([]);
 
   useEffect(() => {
-    const q = query(collection(db, 'images'), orderBy('timestamp', 'desc'));
+    const q = query(
+      collection(db, collectionName),
+      orderBy('timestamp', 'desc'),
+    );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {

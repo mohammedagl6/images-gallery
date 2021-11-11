@@ -6,7 +6,7 @@ import Modal from './components/modal/Modal';
 import AuthContext from './context/AuthContext';
 import useStyles from './styles';
 import Loading from './components/Loading';
-import Verification from './components/user/Verification';
+import Verification from './components/user/varification/Verification';
 
 const App = () => {
   const classes = useStyles();

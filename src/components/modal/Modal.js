@@ -1,10 +1,16 @@
 import { Dialog, DialogTitle, IconButton } from '@mui/material/';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '../../context/AuthContext';
-import ModalAlert from './ModalAlert';
+import Notify from '../Notify';
 
 const Modal = () => {
-  const { modal, setModal } = useAuth();
+  const { modal, setModal, alert, setAlert } = useAuth();
+  const handleClose = () => {
+    setModal({ ...modal, isOpen: false });
+    if (alert?.location === 'modal' && alert?.isAlert) {
+      setAlert({ ...alert, isAlert: false });
+    }
+  };
   return (
     <Dialog
       open={modal.isOpen}
@@ -14,7 +20,7 @@ const Modal = () => {
         {modal.title}
         <IconButton
           aria-label='close'
-          onClick={() => setModal({ ...modal, isOpen: false })}
+          onClick={handleClose}
           sx={{
             position: 'absolute',
             right: 8,
@@ -25,7 +31,7 @@ const Modal = () => {
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <ModalAlert />
+      {alert?.location === 'modal' && alert?.isAlert && <Notify />}
       {modal.content}
     </Dialog>
   );

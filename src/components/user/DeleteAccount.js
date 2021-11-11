@@ -15,15 +15,16 @@ export default function DeleteAccount() {
     e.preventDefault();
     try {
       await deleteUser(currentUser);
-      setModal({ ...modal, content: '' });
+
       setAlert({
         ...alert,
         isAlert: true,
         severity: 'success',
         message: 'Your account has been deleted!',
-        timeout: 5000,
-        closeModal: true,
+        timeout: 8000,
+        location: 'main',
       });
+      setModal({ ...modal, isOpen: false });
     } catch (error) {
       setAlert({
         ...alert,
@@ -31,6 +32,7 @@ export default function DeleteAccount() {
         severity: 'error',
         message: error.message,
         timeout: 5000,
+        location: 'modal',
       });
       console.error(error);
     }

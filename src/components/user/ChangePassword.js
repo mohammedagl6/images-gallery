@@ -17,6 +17,16 @@ export default function ChangePassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!passwordRef.current.value) {
+      return setAlert({
+        ...alert,
+        isAlert: true,
+        severity: 'error',
+        message: 'Enter Password',
+        timeout: 5000,
+        location: 'modal',
+      });
+    }
     if (passwordRef.current.value !== confirmPasswordRef.current.value) {
       return setAlert({
         ...alert,
@@ -24,20 +34,22 @@ export default function ChangePassword() {
         severity: 'error',
         message: "Passwords don't match",
         timeout: 5000,
+        location: 'modal',
       });
     }
 
     try {
       await updatePassword(currentUser, passwordRef.current.value);
-      setModal({ ...modal, content: '' });
+
       setAlert({
         ...alert,
         isAlert: true,
         severity: 'success',
         message: 'Your Password has been updated',
-        timeout: 5000,
-        closeModal: true,
+        timeout: 8000,
+        location: 'main',
       });
+      setModal({ ...modal, isOpen: false });
     } catch (error) {
       setAlert({
         ...alert,
@@ -45,6 +57,7 @@ export default function ChangePassword() {
         severity: 'error',
         message: error.message,
         timeout: 5000,
+        location: 'modal',
       });
       console.error(error);
     }

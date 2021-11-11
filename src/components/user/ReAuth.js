@@ -53,6 +53,7 @@ export default function ReAuth({ action }) {
         severity: 'error',
         message: error.message,
         timeout: 5000,
+        location: 'modal',
       });
       console.error(error);
     }

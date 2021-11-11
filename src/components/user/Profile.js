@@ -24,7 +24,7 @@ export default function Profile() {
     e.preventDefault();
     if (file) {
       try {
-        const url = await uploadFile(file);
+        const url = await uploadFile(file, 'profile');
         console.log(url);
         await updateUserProfile({ displayName: name, photoURL: url });
       } catch (error) {
@@ -34,6 +34,7 @@ export default function Profile() {
           severity: 'error',
           message: error.message,
           timeout: 5000,
+          location: 'modal',
         });
         console.error(error);
       }
@@ -47,6 +48,7 @@ export default function Profile() {
           severity: 'error',
           message: error.message,
           timeout: 5000,
+          location: 'modal',
         });
         console.error(error);
       }
@@ -58,6 +60,7 @@ export default function Profile() {
       severity: 'success',
       message: 'Your profile updated successfully',
       timeout: 3000,
+      location: 'modal',
     });
   };
 

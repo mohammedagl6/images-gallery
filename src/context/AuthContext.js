@@ -26,7 +26,7 @@ const AuthContext = ({ children }) => {
     severity: 'info',
     message: '',
     timeout: null,
-    closeModal: false,
+    location: '',
   });
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);

@@ -18,15 +18,16 @@ export default function ChangeEmail() {
     e.preventDefault();
     try {
       await updateEmail(currentUser, emailRef.current.value);
-      setModal({ ...modal, content: '' });
+
       setAlert({
         ...alert,
         isAlert: true,
         severity: 'success',
         message: 'Your email has been updated successfully',
-        timeout: 5000,
-        closeModal: true,
+        timeout: 8000,
+        location: 'main',
       });
+      setModal({ ...modal, isOpen: false });
     } catch (error) {
       setAlert({
         ...alert,
@@ -34,6 +35,7 @@ export default function ChangeEmail() {
         severity: 'error',
         message: error.message,
         timeout: 5000,
+        location: 'modal',
       });
       console.error(error);
     }

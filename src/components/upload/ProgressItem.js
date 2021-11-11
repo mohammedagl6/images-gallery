@@ -14,8 +14,15 @@ const ProgressItem = ({ file }) => {
   useEffect(() => {
     const uploadImage = async () => {
       try {
-        const url = await uploadFileProgress(file, setProgress);
-        await addDocument(url, currentUser.uid);
+        const url = await uploadFileProgress(file, 'gallery', setProgress);
+        const galleryDoc = {
+          imageUrl: url,
+          uid: currentUser.uid,
+          uName: currentUser.displayName,
+          uPhoto: currentUser.photoURL,
+          uEmail: currentUser.email,
+        };
+        await addDocument('gallery', galleryDoc);
         setImageUrl(null);
       } catch (error) {
         console.log(error);

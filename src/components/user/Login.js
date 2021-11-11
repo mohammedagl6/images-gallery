@@ -36,6 +36,7 @@ export default function FormDialog() {
             severity: 'error',
             message: "Passwords don't match!",
             timeout: 5000,
+            location: 'modal',
           });
         }
         await signUp(email, password);
@@ -48,6 +49,7 @@ export default function FormDialog() {
           severity: 'error',
           message: error.message,
           timeout: 5000,
+          location: 'modal',
         });
         console.error(error);
       }
@@ -62,6 +64,7 @@ export default function FormDialog() {
           severity: 'error',
           message: error.message,
           timeout: 5000,
+          location: 'modal',
         });
         console.error(error);
       }
@@ -78,6 +81,7 @@ export default function FormDialog() {
         severity: 'error',
         message: error.message,
         timeout: 5000,
+        location: 'modal',
       });
       console.error(error);
     }

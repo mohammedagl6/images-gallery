@@ -1,5 +1,4 @@
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+import { Backdrop, CircularProgress } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 
 export default function Loading() {
