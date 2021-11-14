@@ -4,6 +4,7 @@ import useFirestore from '../../firebase/useFirestore';
 import useStyles from './imageListStyles';
 import SimpleReactLightbox from 'simple-react-lightbox';
 import { SRLWrapper } from 'simple-react-lightbox';
+import { useAuth } from '../../context/AuthContext';
 
 function srcset(image, size, rows = 1, cols = 1) {
   return {
@@ -16,8 +17,8 @@ function srcset(image, size, rows = 1, cols = 1) {
 
 const ImagesList = () => {
   const { documents: images } = useFirestore('gallery');
-
   const classes = useStyles();
+
   return (
     <SimpleReactLightbox>
       <SRLWrapper>
@@ -48,14 +49,22 @@ const ImagesList = () => {
                     index - Math.floor(index / pattern.length) * pattern.length
                   ].rows,
                 )}
-                alt='Gallery'
+                alt={
+                  item?.userInfo?.uName || item?.userInfo?.uEmail?.split('@')[0]
+                }
                 loading='lazy'
               />
+
               <Tooltip
-                title={item?.data?.uName || item?.data?.uEmail?.split('@')[0]}
+                title={
+                  item?.userInfo?.uName || item?.userInfo?.uEmail?.split('@')[0]
+                }
                 sx={{ position: 'absolute', bottom: '3px', right: '3px' }}
               >
-                <Avatar src={item?.data?.uPhoto} alt='Travis Howard' />
+                <Avatar
+                  src={item?.userInfo?.uPhoto}
+                  imgProps={{ 'aria-hidden': 'true' }}
+                />
               </Tooltip>
             </ImageListItem>
           ))}

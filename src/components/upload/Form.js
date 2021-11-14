@@ -6,7 +6,7 @@ import Login from '../user/Login';
 
 const Form = ({ setFiles }) => {
   const fileRef = useRef();
-  const { setIsOpen, currentUser, setModalContent } = useAuth();
+  const { currentUser, modal, setModal } = useAuth();
   const handleChange = (e) => {
     setFiles([...e.target.files]);
     fileRef.current.value = null;
@@ -15,8 +15,7 @@ const Form = ({ setFiles }) => {
     if (currentUser) {
       fileRef.current.click();
     } else {
-      setModalContent(<Login />);
-      setIsOpen(true);
+      setModal({ ...modal, isOpen: true, content: <Login /> });
     }
   };
   return (

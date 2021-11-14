@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
@@ -48,6 +48,7 @@ export default function Nav() {
       content: <AccountSettings />,
     });
   };
+
   return (
     <>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>

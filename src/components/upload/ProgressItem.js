@@ -10,7 +10,7 @@ const ProgressItem = ({ file }) => {
   const classes = useStyles();
   const [imageUrl, setImageUrl] = useState(null);
   const [progress, setProgress] = useState(0);
-  const { currentUser } = useAuth();
+  const { currentUser, alert, setAlert } = useAuth();
   useEffect(() => {
     const uploadImage = async () => {
       try {
@@ -18,13 +18,18 @@ const ProgressItem = ({ file }) => {
         const galleryDoc = {
           imageUrl: url,
           uid: currentUser.uid,
-          uName: currentUser.displayName,
-          uPhoto: currentUser.photoURL,
-          uEmail: currentUser.email,
         };
         await addDocument('gallery', galleryDoc);
         setImageUrl(null);
       } catch (error) {
+        setAlert({
+          ...alert,
+          isAlert: true,
+          severity: 'error',
+          message: error.message,
+          timeout: 8000,
+          location: 'main',
+        });
         console.log(error);
       }
     };

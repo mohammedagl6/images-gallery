@@ -72,6 +72,7 @@ export default function Profile() {
       setPhotoUrl(URL.createObjectURL(file));
     }
   };
+
   return (
     <>
       <form onSubmit={handleSubmit}>

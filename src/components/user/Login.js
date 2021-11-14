@@ -17,8 +17,16 @@ export default function FormDialog() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-  const { login, signUp, loginWithGoogle, modal, setModal, alert, setAlert } =
-    useAuth();
+  const {
+    login,
+    signUp,
+    loginWithGoogle,
+    modal,
+    setModal,
+    alert,
+    setAlert,
+    currentUser,
+  } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

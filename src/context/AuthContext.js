@@ -9,6 +9,7 @@ import {
   sendPasswordResetEmail,
 } from '@firebase/auth';
 import { createContext, useContext, useEffect, useState } from 'react';
+import addDocument from '../firebase/addDocument';
 import { auth } from '../firebase/config';
 
 const authContext = createContext();
@@ -51,10 +52,37 @@ const AuthContext = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
-      console.log(user);
+      console.log('User Changed:', user);
     });
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    const updateUserInfo = async () => {
+      if (currentUser) {
+        try {
+          const profileObj = {
+            uid: currentUser.uid,
+            uEmail: currentUser.email,
+            uName: currentUser.displayName,
+            uPhoto: currentUser.photoURL,
+          };
+          await addDocument(`profile`, profileObj, currentUser.uid);
+        } catch (error) {
+          setAlert({
+            ...alert,
+            isAlert: true,
+            severity: 'error',
+            message: error.message,
+            timeout: 8000,
+            location: 'main',
+          });
+          console.log(error);
+        }
+      }
+    };
+    updateUserInfo();
+  }, [currentUser?.displayName, currentUser?.email, currentUser?.photoURL]);
 
   const value = {
     currentUser,
