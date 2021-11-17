@@ -1,9 +1,9 @@
 import { storage } from './config';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
-const uploadFileProgress = async (file, subFolder, setProgress) => {
+const uploadFileProgress = async (file, subFolder, imageName, setProgress) => {
   return new Promise((resolve, reject) => {
-    const storageRef = ref(storage, subFolder + '/' + file.name);
+    const storageRef = ref(storage, subFolder + '/' + imageName);
 
     const upload = uploadBytesResumable(storageRef, file);
     upload.on(

@@ -4,6 +4,7 @@ import useFirestore from '../../firebase/useFirestore';
 import useStyles from './imageListStyles';
 import SimpleReactLightbox from 'simple-react-lightbox';
 import { SRLWrapper } from 'simple-react-lightbox';
+import Options from './Options';
 import { useAuth } from '../../context/AuthContext';
 
 function srcset(image, size, rows = 1, cols = 1) {
@@ -18,7 +19,7 @@ function srcset(image, size, rows = 1, cols = 1) {
 const ImagesList = () => {
   const { documents: images } = useFirestore('gallery');
   const classes = useStyles();
-
+  const { currentUser } = useAuth();
   return (
     <SimpleReactLightbox>
       <SRLWrapper>
@@ -38,6 +39,9 @@ const ImagesList = () => {
               }
               className={classes.imageListItem}
             >
+              {item?.data?.uid === currentUser?.uid && (
+                <Options imageId={item?.id} />
+              )}
               <img
                 {...srcset(
                   item?.data?.imageUrl,

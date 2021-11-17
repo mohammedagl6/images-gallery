@@ -6,6 +6,8 @@ import uploadFileProgress from '../../firebase/uploadFileProgress';
 import addDocument from '../../firebase/addDocument';
 import CircularProgressWithLabel from './CircularProgressWithLabel';
 import { useAuth } from '../../context/AuthContext';
+import { v4 as uuidv4 } from 'uuid';
+
 const ProgressItem = ({ file }) => {
   const classes = useStyles();
   const [imageUrl, setImageUrl] = useState(null);
@@ -13,13 +15,19 @@ const ProgressItem = ({ file }) => {
   const { currentUser, alert, setAlert } = useAuth();
   useEffect(() => {
     const uploadImage = async () => {
+      const imageName = uuidv4() + '.' + file.name.split('.').pop();
       try {
-        const url = await uploadFileProgress(file, 'gallery', setProgress);
+        const url = await uploadFileProgress(
+          file,
+          `gallery/${currentUser.uid}`,
+          imageName,
+          setProgress,
+        );
         const galleryDoc = {
           imageUrl: url,
           uid: currentUser.uid,
         };
-        await addDocument('gallery', galleryDoc);
+        await addDocument('gallery', galleryDoc, imageName);
         setImageUrl(null);
       } catch (error) {
         setAlert({

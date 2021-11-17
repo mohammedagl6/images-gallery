@@ -11,6 +11,9 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../context/AuthContext';
 import uploadFile from '../../firebase/uploadFile';
+import { v4 as uuidv4 } from 'uuid';
+import { deleteObject, ref } from '@firebase/storage';
+import { storage } from '../../firebase/config';
 
 export default function Profile() {
   const { currentUser, updateUserProfile, setLoading, alert, setAlert } =
@@ -23,9 +26,29 @@ export default function Profile() {
     setLoading(true);
     e.preventDefault();
     if (file) {
+      const imageName = uuidv4() + '.' + file.name.split('.').pop();
       try {
-        const url = await uploadFile(file, 'profile');
-        console.log(url);
+        const url = await uploadFile(
+          file,
+          `profile/${currentUser.uid}`,
+          imageName,
+        );
+
+        if (currentUser?.photoURL) {
+          const prevImage = currentUser?.photoURL
+            ?.split(`${currentUser.uid}%2F`)[1]
+            ?.split('?')[0];
+          if (prevImage) {
+            try {
+              deleteObject(
+                ref(storage, `profile/${currentUser.uid}/${prevImage}`),
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
+
         await updateUserProfile({ displayName: name, photoURL: url });
       } catch (error) {
         setAlert({
