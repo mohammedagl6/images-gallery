@@ -44,6 +44,7 @@ const useFirestore = (collectionName) => {
           const imagesWithUsers = docs.map((doc) => {
             return { ...doc, userInfo: usersInfo[doc.data.uid] };
           });
+          console.log(imagesWithUsers)
           setDocuments(imagesWithUsers);
         })
         .catch((error) => {

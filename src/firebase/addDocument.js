@@ -1,11 +1,5 @@
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  doc,
-  setDoc,
-} from 'firebase/firestore';
-import { db } from './config';
+import { collection, serverTimestamp, doc, setDoc } from "firebase/firestore";
+import { db } from "./config";
 
 const addDocument = async (collectionName, documentObj, id) => {
   const docRef = doc(collection(db, collectionName), id);

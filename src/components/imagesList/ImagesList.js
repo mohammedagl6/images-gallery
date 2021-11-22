@@ -1,11 +1,18 @@
-import * as React from 'react';
-import { ImageList, ImageListItem, Avatar, Tooltip } from '@mui/material';
-import useFirestore from '../../firebase/useFirestore';
-import useStyles from './imageListStyles';
-import SimpleReactLightbox from 'simple-react-lightbox';
-import { SRLWrapper } from 'simple-react-lightbox';
-import Options from './Options';
-import { useAuth } from '../../context/AuthContext';
+import * as React from "react";
+import {
+  ImageList,
+  ImageListItem,
+  Avatar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import useFirestore from "../../firebase/useFirestore";
+import useStyles from "./imageListStyles";
+import SimpleReactLightbox from "simple-react-lightbox";
+import { SRLWrapper } from "simple-react-lightbox";
+import Options from "./Options";
+import { useAuth } from "../../context/AuthContext";
+import moment from "moment";
 
 function srcset(image, size, rows = 1, cols = 1) {
   return {
@@ -17,13 +24,13 @@ function srcset(image, size, rows = 1, cols = 1) {
 }
 
 const ImagesList = () => {
-  const { documents: images } = useFirestore('gallery');
+  const { documents: images } = useFirestore("gallery");
   const classes = useStyles();
   const { currentUser } = useAuth();
   return (
     <SimpleReactLightbox>
       <SRLWrapper>
-        <ImageList variant='quilted' cols={4} rowHeight={200}>
+        <ImageList variant="quilted" cols={4} rowHeight={200}>
           {images.map((item, index) => (
             <ImageListItem
               key={item?.id}
@@ -51,23 +58,37 @@ const ImagesList = () => {
                   ].cols,
                   pattern[
                     index - Math.floor(index / pattern.length) * pattern.length
-                  ].rows,
+                  ].rows
                 )}
                 alt={
-                  item?.userInfo?.uName || item?.userInfo?.uEmail?.split('@')[0]
+                  item?.userInfo?.uName || item?.userInfo?.uEmail?.split("@")[0]
                 }
-                loading='lazy'
+                loading="lazy"
               />
-
+              <Typography
+                variant="body2"
+                component="span"
+                sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  color: "white",
+                  background: "rgba(0,0,0,0.3)",
+                  padding: "5px",
+                  borderTopRightRadius: "5px",
+                }}
+              >
+                {moment(item?.data?.timestamp?.toDate()).fromNow()}
+              </Typography>
               <Tooltip
                 title={
-                  item?.userInfo?.uName || item?.userInfo?.uEmail?.split('@')[0]
+                  item?.userInfo?.uName || item?.userInfo?.uEmail?.split("@")[0]
                 }
-                sx={{ position: 'absolute', bottom: '3px', right: '3px' }}
+                sx={{ position: "absolute", bottom: "3px", right: "3px" }}
               >
                 <Avatar
                   src={item?.userInfo?.uPhoto}
-                  imgProps={{ 'aria-hidden': 'true' }}
+                  imgProps={{ "aria-hidden": "true" }}
                 />
               </Tooltip>
             </ImageListItem>
