@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 import {
   Button,
   TextField,
   DialogActions,
   DialogContent,
   DialogContentText,
-} from '@mui/material/';
+} from "@mui/material/";
 
-import SendIcon from '@mui/icons-material/Send';
-import GoogleIcon from '@mui/icons-material/Google';
-import { useAuth } from '../../context/AuthContext';
-import ResetPassword from './ResetPassword';
+import SendIcon from "@mui/icons-material/Send";
+import GoogleIcon from "@mui/icons-material/Google";
+import { useAuth } from "../../context/AuthContext";
+import ResetPassword from "./ResetPassword";
 
 export default function FormDialog() {
   const [isRegister, setIsRegister] = useState(false);
@@ -41,10 +41,10 @@ export default function FormDialog() {
           return setAlert({
             ...alert,
             isAlert: true,
-            severity: 'error',
+            severity: "error",
             message: "Passwords don't match!",
             timeout: 5000,
-            location: 'modal',
+            location: "modal",
           });
         }
         await signUp(email, password);
@@ -54,10 +54,10 @@ export default function FormDialog() {
         setAlert({
           ...alert,
           isAlert: true,
-          severity: 'error',
+          severity: "error",
           message: error.message,
           timeout: 5000,
-          location: 'modal',
+          location: "modal",
         });
         console.error(error);
       }
@@ -69,10 +69,10 @@ export default function FormDialog() {
         setAlert({
           ...alert,
           isAlert: true,
-          severity: 'error',
+          severity: "error",
           message: error.message,
           timeout: 5000,
-          location: 'modal',
+          location: "modal",
         });
         console.error(error);
       }
@@ -82,24 +82,24 @@ export default function FormDialog() {
   const handleGoogleLogin = async () => {
     try {
       await loginWithGoogle();
+      setModal({ ...modal, isOpen: false });
     } catch (error) {
       setAlert({
         ...alert,
         isAlert: true,
-        severity: 'error',
+        severity: "error",
         message: error.message,
         timeout: 5000,
-        location: 'modal',
+        location: "modal",
       });
       console.error(error);
     }
-    setModal({ ...modal, isOpen: false });
   };
   useEffect(() => {
     if (isRegister) {
-      setModal({ ...modal, title: 'Register' });
+      setModal({ ...modal, title: "Register" });
     } else {
-      setModal({ ...modal, title: 'Login' });
+      setModal({ ...modal, title: "Login" });
     }
   }, [isRegister]);
   return (
@@ -111,67 +111,67 @@ export default function FormDialog() {
           </DialogContentText>
           <TextField
             autoFocus
-            margin='dense'
-            id='email'
-            label='Email Address'
-            type='email'
+            margin="dense"
+            id="email"
+            label="Email Address"
+            type="email"
             fullWidth
-            variant='standard'
+            variant="standard"
             inputRef={emailRef}
           />
           <TextField
-            margin='dense'
-            id='password'
-            label='Password'
-            type='password'
+            margin="dense"
+            id="password"
+            label="Password"
+            type="password"
             fullWidth
-            variant='standard'
+            variant="standard"
             inputRef={passwordRef}
           />
           {isRegister && (
             <TextField
-              margin='dense'
-              id='confirmPassword'
-              label='Confirm Password'
-              type='password'
+              margin="dense"
+              id="confirmPassword"
+              label="Confirm Password"
+              type="password"
               fullWidth
-              variant='standard'
+              variant="standard"
               inputRef={confirmPasswordRef}
             />
           )}
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'space-between' }}>
+        <DialogActions sx={{ justifyContent: "space-between" }}>
           <Button
-            size='small'
+            size="small"
             onClick={() =>
               setModal({
                 ...modal,
-                title: 'Reset Password',
+                title: "Reset Password",
                 content: <ResetPassword />,
               })
             }
           >
             Forgot Password
           </Button>
-          <Button variant='contained' endIcon={<SendIcon />} type='submit'>
-            {isRegister ? 'Register' : 'Login'}
+          <Button variant="contained" endIcon={<SendIcon />} type="submit">
+            {isRegister ? "Register" : "Login"}
           </Button>
         </DialogActions>
       </form>
-      <DialogActions style={{ justifyContent: 'left' }}>
+      <DialogActions style={{ justifyContent: "left" }}>
         <DialogContentText>
           {isRegister
-            ? 'Do you have an account? Create new one'
+            ? "Do you have an account? Create new one"
             : "Don't you have an account? Create new one"}
 
           <Button onClick={() => setIsRegister(!isRegister)}>
-            {isRegister ? 'Login ' : 'Register'}
+            {isRegister ? "Login " : "Register"}
           </Button>
         </DialogContentText>
       </DialogActions>
-      <DialogActions style={{ justifyContent: 'center' }}>
+      <DialogActions style={{ justifyContent: "center" }}>
         <Button
-          variant='outlined'
+          variant="outlined"
           startIcon={<GoogleIcon />}
           onClick={handleGoogleLogin}
         >
