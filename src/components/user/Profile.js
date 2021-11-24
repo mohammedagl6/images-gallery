@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Button,
   TextField,
@@ -6,14 +6,14 @@ import {
   DialogContent,
   DialogContentText,
   Avatar,
-} from '@mui/material/';
+} from "@mui/material/";
 
-import SendIcon from '@mui/icons-material/Send';
-import { useAuth } from '../../context/AuthContext';
-import uploadFile from '../../firebase/uploadFile';
-import { v4 as uuidv4 } from 'uuid';
-import { deleteObject, ref } from '@firebase/storage';
-import { storage } from '../../firebase/config';
+import SendIcon from "@mui/icons-material/Send";
+import { useAuth } from "../../context/AuthContext";
+import uploadFile from "../../firebase/uploadFile";
+import { v4 as uuidv4 } from "uuid";
+import { deleteObject, ref } from "@firebase/storage";
+import { storage } from "../../firebase/config";
 
 export default function Profile() {
   const { currentUser, updateUserProfile, setLoading, alert, setAlert } =
@@ -26,22 +26,22 @@ export default function Profile() {
     setLoading(true);
     e.preventDefault();
     if (file) {
-      const imageName = uuidv4() + '.' + file.name.split('.').pop();
+      const imageName = uuidv4() + "." + file.name.split(".").pop();
       try {
         const url = await uploadFile(
           file,
           `profile/${currentUser.uid}`,
-          imageName,
+          imageName
         );
 
         if (currentUser?.photoURL) {
           const prevImage = currentUser?.photoURL
             ?.split(`${currentUser.uid}%2F`)[1]
-            ?.split('?')[0];
+            ?.split("?")[0];
           if (prevImage) {
             try {
               deleteObject(
-                ref(storage, `profile/${currentUser.uid}/${prevImage}`),
+                ref(storage, `profile/${currentUser.uid}/${prevImage}`)
               );
             } catch (error) {
               console.log(error);
@@ -54,10 +54,10 @@ export default function Profile() {
         setAlert({
           ...alert,
           isAlert: true,
-          severity: 'error',
+          severity: "error",
           message: error.message,
           timeout: 5000,
-          location: 'modal',
+          location: "modal",
         });
         console.error(error);
       }
@@ -68,10 +68,10 @@ export default function Profile() {
         setAlert({
           ...alert,
           isAlert: true,
-          severity: 'error',
+          severity: "error",
           message: error.message,
           timeout: 5000,
-          location: 'modal',
+          location: "modal",
         });
         console.error(error);
       }
@@ -80,10 +80,10 @@ export default function Profile() {
     setAlert({
       ...alert,
       isAlert: true,
-      severity: 'success',
-      message: 'Your profile updated successfully',
+      severity: "success",
+      message: "Your profile updated successfully",
       timeout: 3000,
-      location: 'modal',
+      location: "modal",
     });
   };
 
@@ -105,32 +105,33 @@ export default function Profile() {
           </DialogContentText>
           <TextField
             autoFocus
-            margin='dense'
-            id='name'
-            label='Name'
-            type='text'
+            margin="dense"
+            id="name"
+            label="Name"
+            type="text"
             fullWidth
-            variant='standard'
-            value={name || ''}
+            variant="standard"
+            value={name || ""}
             onChange={(e) => setName(e.target.value)}
+            required
           />
-          <label htmlFor='profilePhoto'>
+          <label htmlFor="profilePhoto">
             <input
-              accept='image/*'
-              id='profilePhoto'
-              type='file'
-              style={{ display: 'none' }}
+              accept="image/*"
+              id="profilePhoto"
+              type="file"
+              style={{ display: "none" }}
               onChange={handleChange}
             />
             <Avatar
               alt={currentUser?.displayName}
               src={photoUrl}
-              sx={{ width: 75, height: 75, cursor: 'pointer' }}
+              sx={{ width: 75, height: 75, cursor: "pointer" }}
             />
           </label>
         </DialogContent>
         <DialogActions>
-          <Button variant='contained' endIcon={<SendIcon />} type='submit'>
+          <Button variant="contained" endIcon={<SendIcon />} type="submit">
             Update
           </Button>
         </DialogActions>

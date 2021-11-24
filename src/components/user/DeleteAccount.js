@@ -13,10 +13,12 @@ import deleteDocument from "../../firebase/deleteDocument";
 import deleteFile from "../../firebase/deleteFile";
 
 export default function DeleteAccount() {
-  const { modal, setModal, currentUser, alert, setAlert } = useAuth();
+  const { modal, setModal, currentUser, alert, setAlert, setLoading } =
+    useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const q = query(
         collection(db, "gallery"),
@@ -69,6 +71,7 @@ export default function DeleteAccount() {
       });
       console.error(error);
     }
+    setLoading(false);
   };
 
   return (

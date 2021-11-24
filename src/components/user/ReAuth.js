@@ -1,48 +1,49 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 import {
   Button,
   TextField,
   DialogActions,
   DialogContent,
   DialogContentText,
-} from '@mui/material/';
+} from "@mui/material/";
 
-import SendIcon from '@mui/icons-material/Send';
-import { useAuth } from '../../context/AuthContext';
+import SendIcon from "@mui/icons-material/Send";
+import { useAuth } from "../../context/AuthContext";
 import {
   EmailAuthProvider,
   reauthenticateWithCredential,
-} from '@firebase/auth';
-import ChangePassword from './ChangePassword';
-import ChangeEmail from './ChangeEmail';
-import DeleteAccount from './DeleteAccount';
+} from "@firebase/auth";
+import ChangePassword from "./ChangePassword";
+import ChangeEmail from "./ChangeEmail";
+import DeleteAccount from "./DeleteAccount";
 
 export default function ReAuth({ action }) {
   const passwordRef = useRef();
-  const { modal, setModal, currentUser, alert, setAlert } = useAuth();
+  const { modal, setModal, currentUser, alert, setAlert, setLoading } =
+    useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const credential = EmailAuthProvider.credential(
         currentUser.email,
-        passwordRef.current.value,
+        passwordRef.current.value
       );
       await reauthenticateWithCredential(currentUser, credential);
 
-      if (action === 'changePassword') {
+      if (action === "changePassword") {
         setModal({
           ...modal,
-          title: 'Change Password',
+          title: "Change Password",
           content: <ChangePassword />,
         });
-      } else if (action === 'changeEmail') {
-        setModal({ ...modal, title: 'Update Email', content: <ChangeEmail /> });
-      } else if (action === 'deleteAccount') {
+      } else if (action === "changeEmail") {
+        setModal({ ...modal, title: "Update Email", content: <ChangeEmail /> });
+      } else if (action === "deleteAccount") {
         setModal({
           ...modal,
-          title: 'Delete Account',
+          title: "Delete Account",
           content: <DeleteAccount />,
         });
       }
@@ -50,13 +51,14 @@ export default function ReAuth({ action }) {
       setAlert({
         ...alert,
         isAlert: true,
-        severity: 'error',
+        severity: "error",
         message: error.message,
         timeout: 5000,
-        location: 'modal',
+        location: "modal",
       });
       console.error(error);
     }
+    setLoading(false);
   };
 
   return (
@@ -67,17 +69,18 @@ export default function ReAuth({ action }) {
             Please enter your current password.
           </DialogContentText>
           <TextField
-            margin='dense'
-            id='password'
-            label='Password'
-            type='password'
+            margin="dense"
+            id="password"
+            label="Password"
+            type="password"
             fullWidth
-            variant='standard'
+            variant="standard"
             inputRef={passwordRef}
+            required
           />
         </DialogContent>
         <DialogActions>
-          <Button variant='contained' endIcon={<SendIcon />} type='submit'>
+          <Button variant="contained" endIcon={<SendIcon />} type="submit">
             Submit
           </Button>
         </DialogActions>

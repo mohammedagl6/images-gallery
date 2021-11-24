@@ -25,11 +25,12 @@ export default function FormDialog() {
     setModal,
     alert,
     setAlert,
-    currentUser,
+    setLoading,
   } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const { email, password, confirmPassword } = {
       email: emailRef.current.value,
       password: passwordRef.current.value,
@@ -47,6 +48,7 @@ export default function FormDialog() {
             location: "modal",
           });
         }
+
         await signUp(email, password);
 
         setModal({ ...modal, isOpen: false });
@@ -77,6 +79,7 @@ export default function FormDialog() {
         console.error(error);
       }
     }
+    setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
@@ -118,6 +121,7 @@ export default function FormDialog() {
             fullWidth
             variant="standard"
             inputRef={emailRef}
+            required
           />
           <TextField
             margin="dense"
@@ -127,6 +131,7 @@ export default function FormDialog() {
             fullWidth
             variant="standard"
             inputRef={passwordRef}
+            required
           />
           {isRegister && (
             <TextField
@@ -137,6 +142,7 @@ export default function FormDialog() {
               fullWidth
               variant="standard"
               inputRef={confirmPasswordRef}
+              required
             />
           )}
         </DialogContent>

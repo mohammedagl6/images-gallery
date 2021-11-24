@@ -1,50 +1,52 @@
-import Notification from './Notification';
-import { useAuth } from '../../../context/AuthContext';
-import { sendEmailVerification } from '@firebase/auth';
-import { useState } from 'react';
-import { Button } from '@mui/material';
-import Notify from '../../Notify';
+import Notification from "./Notification";
+import { useAuth } from "../../../context/AuthContext";
+import { sendEmailVerification } from "@firebase/auth";
+import { useState } from "react";
+import { Button } from "@mui/material";
+import Notify from "../../Notify";
 
 const Verification = () => {
-  const { currentUser, alert, setAlert } = useAuth();
+  const { currentUser, alert, setAlert, setLoading } = useAuth();
   const [isClicked, setIsClicked] = useState(false);
   const verify = async () => {
     setIsClicked(true);
+    setLoading(true);
     try {
       await sendEmailVerification(currentUser);
       setAlert({
         ...alert,
         isAlert: true,
-        severity: 'info',
+        severity: "info",
         message:
-          'Verification link has been sent to your email. Please check your email.',
+          "Verification link has been sent to your email. Please check your email.",
         timeout: 8000,
-        location: 'main',
+        location: "main",
       });
     } catch (error) {
       setAlert({
         ...alert,
         isAlert: true,
-        severity: 'error',
+        severity: "error",
         message: error?.message,
         timeout: 8000,
-        location: 'main',
+        location: "main",
       });
       console.error(error);
     }
+    setLoading(false);
   };
   return (
     <>
       {currentUser?.emailVerified === false && (
         <Notification
-          severity='warning'
+          severity="warning"
           content={
             <>
               Your email has not been verified yet!
               <Button
-                size='small'
+                size="small"
                 onClick={verify}
-                sx={{ lineHeight: 'initial' }}
+                sx={{ lineHeight: "initial" }}
                 disabled={isClicked}
               >
                 Verify Now
@@ -53,7 +55,7 @@ const Verification = () => {
           }
         />
       )}
-      {alert?.location === 'main' && alert?.isAlert && <Notify />}
+      {alert?.location === "main" && alert?.isAlert && <Notify />}
     </>
   );
 };
